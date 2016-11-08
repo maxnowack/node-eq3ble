@@ -12,14 +12,16 @@
   "author": "Max Nowack <max@unsou.de>",
   "license": "MIT",
   "keywords": [
-    "homebridge-plugin"
+    "bluetooth",
+    "thermostat",
+    "homeautomation"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/maxnowack/eq3-thermostat.git"
+    "url": "git://github.com/maxnowack/node-eq3ble.git"
   },
   "bugs": {
-    "url": "http://github.com/maxnowack/eq3-thermostat/issues"
+    "url": "http://github.com/maxnowack/node-eq3ble/issues"
   },
   "dependencies": {
     "babel-core": "6.18.2",
