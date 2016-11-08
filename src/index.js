@@ -90,6 +90,12 @@ class EQ3BLE {
     }
     return this.writeAndGetNotification(payload.unlockThermostat())
   }
+  turnOff() {
+    return this.setTemperature(4.5)
+  }
+  turnOn() {
+    return this.setTemperature(30)
+  }
   setTemperature(temperature) {
     return this.writeAndGetNotification(payload.setTemperature(temperature))
   }
