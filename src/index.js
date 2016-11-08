@@ -1,5 +1,11 @@
 import NobleDevice from 'noble-device'
-import { serviceUuid, writeCharacteristic, notificationCharacteristic, payload } from './interface'
+import {
+  serviceUuid,
+  writeCharacteristic,
+  notificationCharacteristic,
+  payload,
+  parseInfo,
+} from './interface'
 
 class EQ3BLE {
   static SCAN_UUIDS = [serviceUuid]
@@ -67,7 +73,7 @@ class EQ3BLE {
     })
   }
   getInfo() {
-    return this.writeAndGetNotification(payload.getInfo())
+    return this.writeAndGetNotification(payload.getInfo()).then(info => parseInfo(info))
   }
   setBoost(enable) {
     if (enable) {

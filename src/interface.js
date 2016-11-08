@@ -1,3 +1,4 @@
+/* eslint no-bitwise: 0 */
 export const writeCharacteristic = '3fa4585ace4a3baddb4bb8df8179ea09'
 export const notificationCharacteristic = 'd0e8434dcd290996af416c90f4e0eb2a'
 export const serviceUuid = '3e135142654f9090134aa6ff5bb77046'
@@ -35,4 +36,40 @@ export const payload = {
     const second = date.getSeconds().toString(16)
     return new Buffer(prefix + year + month + day + hour + minute + second, 'hex')
   },
+}
+
+const status = {
+  manual: 1,
+  holiday: 2,
+  boost: 4,
+  dst: 8,
+  openWindow: 16,
+  unknown: 32,
+  unknown2: 64,
+  lowBattery: 128,
+}
+
+export function parseInfo(info) {
+  const statusMask = info[2]
+  const valvePosition = info[3]
+  const targetTemperature = info[5] / 2
+  const day = info[6] || null
+  const hour = info[8] || null
+  const month = info[9] || null
+
+  return {
+    status: {
+      manual: (statusMask & status.manual) === status.manual,
+      holiday: (statusMask & status.holiday) === status.holiday,
+      boost: (statusMask & status.boost) === status.boost,
+      dst: (statusMask & status.dst) === status.dst,
+      openWindow: (statusMask & status.openWindow) === status.openWindow,
+      lowBattery: (statusMask & status.lowBattery) === status.lowBattery,
+    },
+    valvePosition,
+    targetTemperature,
+    day,
+    hour,
+    month,
+  }
 }
