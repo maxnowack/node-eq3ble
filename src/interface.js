@@ -53,9 +53,6 @@ export function parseInfo(info) {
   const statusMask = info[2]
   const valvePosition = info[3]
   const targetTemperature = info[5] / 2
-  const day = info[6] || null
-  const hour = info[8] || null
-  const month = info[9] || null
 
   return {
     status: {
@@ -68,8 +65,5 @@ export function parseInfo(info) {
     },
     valvePosition,
     targetTemperature,
-    day,
-    hour,
-    month,
   }
 }
