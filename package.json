@@ -7,7 +7,8 @@
     "start": "NODE=production node ./dist/index",
     "dev": "./node_modules/.bin/babel-watch ./src/index",
     "lint": "./node_modules/.bin/eslint src",
-    "build": "./node_modules/.bin/babel src -d dist"
+    "build": "./node_modules/.bin/babel src -d dist",
+    "prepublish": "npm run build"
   },
   "author": "Max Nowack <max@unsou.de>",
   "license": "MIT",
