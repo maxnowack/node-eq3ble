@@ -112,7 +112,7 @@ class EQ3BLE {
     return this.writeAndGetNotification(payload.setWindowOpen(temperature, duration))
   }
   setDateTime(date) {
-    return this.writeAndGetNotification(payload.setDatetime(date))
+    return this.writeAndGetNotification(payload.setDatetime(date)).then(info => parseInfo(info))
   }
 }
 NobleDevice.Util.inherits(EQ3BLE, NobleDevice)
