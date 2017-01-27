@@ -11,7 +11,7 @@
     "prepublish": "npm run build"
   },
   "author": "Max Nowack <max@unsou.de>",
-  "license": "MIT",
+  "license": "GPLv3",
   "keywords": [
     "bluetooth",
     "thermostat",
