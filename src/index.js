@@ -103,7 +103,7 @@ class EQ3BLE {
     return this.setTemperature(30)
   }
   setTemperature(temperature) {
-    return this.writeAndGetNotification(payload.setTemperature(temperature))
+    return this.writeAndGetNotification(payload.setTemperature(temperature)).then(info => parseInfo(info))
   }
   setTemperatureOffset(offset) {
     return this.writeAndGetNotification(payload.setTemperatureOffset(offset))
