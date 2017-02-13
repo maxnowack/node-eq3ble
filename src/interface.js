@@ -4,7 +4,7 @@ export const notificationCharacteristic = 'd0e8434dcd290996af416c90f4e0eb2a'
 export const serviceUuid = '3e135142654f9090134aa6ff5bb77046'
 
 export const payload = {
-  getInfo: () => new Buffer('03', 'hex'),
+  getInfo: () => { return setDatetime(new Date()) },
   activateBoostmode: () => new Buffer('4501', 'hex'),
   deactivateBoostmode: () => new Buffer('4500', 'hex'),
   setAutomaticMode: () => new Buffer('4000', 'hex'),
@@ -27,14 +27,15 @@ export const payload = {
     return new Buffer(`11${temp}${dur}`, 'hex')
   },
   setDatetime: (date) => {
-    const prefix = '03'
-    const year = date.getFullYear().toString(16)
-    const month = (date.getMonth() + 1).toString(16)
-    const day = date.getDay().toString(16)
-    const hour = date.getHours().toString(16)
-    const minute = date.getMinutes().toString(16)
-    const second = date.getSeconds().toString(16)
-    return new Buffer(prefix + year + month + day + hour + minute + second, 'hex')
+    var b = Buffer.alloc(7)
+    b[0] = 3
+    b[1] = (date.getFullYear() % 100)
+    b[2] = (date.getMonth() + 1)
+    b[3] = date.getDate()
+    b[4] = date.getHours()
+    b[5] = date.getMinutes()
+    b[6] = date.getSeconds()
+    return b
   },
 }
 
