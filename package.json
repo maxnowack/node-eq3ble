@@ -1,6 +1,6 @@
 {
   "name": "eq3ble",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Node package to control an EQ3 bluetooth thermostat",
   "main": "dist/index.js",
   "scripts": {
