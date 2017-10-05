@@ -4,7 +4,7 @@ export const notificationCharacteristic = 'd0e8434dcd290996af416c90f4e0eb2a'
 export const serviceUuid = '3e135142654f9090134aa6ff5bb77046'
 
 export const payload = {
-  getInfo: () => { return setDatetime(new Date()) },
+  getInfo: () => payload.setDatetime(new Date()),
   activateBoostmode: () => new Buffer('4501', 'hex'),
   deactivateBoostmode: () => new Buffer('4500', 'hex'),
   setAutomaticMode: () => new Buffer('4000', 'hex'),
@@ -13,25 +13,26 @@ export const payload = {
   lockThermostat: () => new Buffer('8001', 'hex'),
   unlockThermostat: () => new Buffer('8000', 'hex'),
   setTemperature: temperature => new Buffer(`41${temperature <= 7.5 ? '0' : ''}${(2 * temperature).toString(16)}`, 'hex'),
-  requestProfile: day => {
-    var b = Buffer.alloc(2);
+  requestProfile: (day) => {
+    const b = Buffer.alloc(2);
     b[0] = 32;
     b[1] = day;
     return b;
   },
-  setProfile: (day, periods) {
-    var b = Buffer.alloc(16);
+  setProfile: (day, periods) => {
+    const b = Buffer.alloc(16);
     b[0] = 16;
     b[1] = day;
-    for (var i=0;i<periods.length && i<7;i++) {
-      b[(i*2)+2] = periods[i].temperature * 2;
-      if (periods[i].to)
-        b[(i*2)+3] = periods[i].to;
-      else if (periods[i].toHuman)
-        b[(i*2)+3] = periods[i].toHuman * 60 / 10;
+    for (let i = 0; i < periods.length && i < 7; i += 1) {
+      b[(i * 2) + 2] = periods[i].temperature * 2;
+      if (periods[i].to) {
+        b[(i * 2) + 3] = periods[i].to;
+      } else if (periods[i].toHuman) {
+        b[(i * 2) + 3] = (periods[i].toHuman * 60) / 10;
+      }
     }
     return b;
-  }
+  },
   setTemperatureOffset: offset => new Buffer(`13${((2 * offset) + 7).toString(16)}`, 'hex'),
   setDay: () => new Buffer('43', 'hex'),
   setNight: () => new Buffer('44', 'hex'),
@@ -46,7 +47,7 @@ export const payload = {
     return new Buffer(`11${temp}${dur}`, 'hex')
   },
   setDatetime: (date) => {
-    var b = Buffer.alloc(7)
+    const b = Buffer.alloc(7)
     b[0] = 3
     b[1] = (date.getFullYear() % 100)
     b[2] = (date.getMonth() + 1)
@@ -89,22 +90,21 @@ export function parseInfo(info) {
 }
 
 export function parseProfile(buffer) {
-  var profile = {};
-  var periods = [];
+  const profile = {};
+  const periods = [];
   profile.periods = periods;
-  if (buffer[0] == 33) {  
+  if (buffer[0] === 33) {
     profile.dayOfWeek = buffer[1]; // 0-saturday, 1-sunday
-    profile.dayOfWeekName = dayNames[profile.dayOfWeek];
-    for (var i=2; i<buffer.length;i+=2) {
-      if (buffer[i] != 0) {
-          var temperature = (buffer[i] / 2);
-	  var to = buffer[i+1];
-          var toHuman = (buffer[i+1] * 10 /60);
-	  var from = periods.length == 0 ? 0 : periods[periods.length-1].to;
-	  var fromHuman = periods.length == 0 ? 0 : periods[periods.length-1].toHuman;
-          periods.push({ temperature: temperature, from: from, to: to, fromHuman: fromHuman, toHuman: toHuman });
+    for (let i = 2; i < buffer.length; i += 2) {
+      if (buffer[i] !== 0) {
+        const temperature = (buffer[i] / 2);
+        const to = buffer[i + 1];
+        const toHuman = ((buffer[i + 1] * 10) / 60);
+        const from = periods.length === 0 ? 0 : periods[periods.length - 1].to;
+        const fromHuman = periods.length === 0 ? 0 : periods[periods.length - 1].toHuman;
+        periods.push({ temperature, from, to, fromHuman, toHuman });
       }
     }
-  }  
+  }
   return profile;
 }

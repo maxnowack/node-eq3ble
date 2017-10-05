@@ -5,6 +5,7 @@ import {
   notificationCharacteristic,
   payload,
   parseInfo,
+  parseProfile,
 } from './interface'
 
 class EQ3BLE {
@@ -103,17 +104,16 @@ class EQ3BLE {
     return this.setTemperature(30)
   }
   setTemperature(temperature) {
-    return this.writeAndGetNotification(payload.setTemperature(temperature)).then(info => parseInfo(info))
+    return this.writeAndGetNotification(payload.setTemperature(temperature))
+      .then(info => parseInfo(info))
   }
   requestProfile(day) {
-    return this.writeAndGetNotification(_interface.payload.requestProfile(day)).then(function (profile) {
-      return (0, _interface.parseProfile)(profile)
-    })
+    return this.writeAndGetNotification(payload.requestProfile(day))
+      .then(profile => parseProfile(profile))
   }
   setProfile(day, periods) {
-    return this.writeAndGetNotification(_interface.payload.setProfile(day, periods)).then(function (result) {
-      return result[0] == 2 && result[1] == 2;
-    })
+    return this.writeAndGetNotification(payload.setProfile(day, periods))
+      .then(result => result[0] === 2 && result[1] === 2)
   }
   setTemperatureOffset(offset) {
     return this.writeAndGetNotification(payload.setTemperatureOffset(offset))
