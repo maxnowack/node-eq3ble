@@ -32,16 +32,7 @@
     "extends": [
       "airbnb-base"
     ],
-    "parser": "babel-eslint",
-    "rules": {
-      "semi": 0,
-      "no-param-reassign": [
-        2,
-        {
-          "props": false
-        }
-      ]
-    }
+    "parser": "babel-eslint"
   },
   "babel": {
     "presets": [
