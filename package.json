@@ -1,6 +1,6 @@
 {
   "name": "eq3ble",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "description": "Node package to control an EQ3 bluetooth thermostat",
   "main": "dist/index.js",
   "scripts": {
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "babel-core": "6.26.0",
-    "noble": "^1.8.1",
+    "noble": "git+https://github.com/PolideaInternal/noble.git#macos_highsierra",
     "p-timeout": "^1.2.0"
   },
   "devDependencies": {

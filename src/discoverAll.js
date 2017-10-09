@@ -6,7 +6,7 @@ import { deviceName } from './interface';
 class DiscoverHelper extends EventEmitter {
   constructor() {
     super();
-    this.poweredOn = false;
+    this.poweredOn = noble.state === 'poweredOn';
     noble.on('stateChange', (state) => {
       if (state === 'poweredOn') {
         this.poweredOn = true;
