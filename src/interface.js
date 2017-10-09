@@ -1,7 +1,8 @@
 /* eslint no-bitwise: 0 */
-export const writeCharacteristic = '3fa4585ace4a3baddb4bb8df8179ea09';
-export const notificationCharacteristic = 'd0e8434dcd290996af416c90f4e0eb2a';
+export const writeCharacteristicUuid = '3fa4585ace4a3baddb4bb8df8179ea09';
+export const notificationCharacteristicUuid = 'd0e8434dcd290996af416c90f4e0eb2a';
 export const serviceUuid = '3e135142654f9090134aa6ff5bb77046';
+export const deviceName = 'CC-RT-BLE';
 
 export const payload = {
   getInfo: () => payload.setDatetime(new Date()),
@@ -14,24 +15,24 @@ export const payload = {
   unlockThermostat: () => Buffer.from('8000', 'hex'),
   setTemperature: temperature => Buffer.from(`41${temperature <= 7.5 ? '0' : ''}${(2 * temperature).toString(16)}`, 'hex'),
   requestProfile: (day) => {
-    const b = Buffer.alloc(2);
-    b[0] = 32;
-    b[1] = day;
-    return b;
+    const data = Buffer.alloc(2);
+    data[0] = 32;
+    data[1] = day;
+    return data;
   },
   setProfile: (day, periods) => {
-    const b = Buffer.alloc(16);
-    b[0] = 16;
-    b[1] = day;
-    for (let i = 0; i < periods.length && i < 7; i += 1) {
-      b[(i * 2) + 2] = periods[i].temperature * 2;
-      if (periods[i].to) {
-        b[(i * 2) + 3] = periods[i].to;
-      } else if (periods[i].toHuman) {
-        b[(i * 2) + 3] = (periods[i].toHuman * 60) / 10;
+    const data = Buffer.alloc(16);
+    data[0] = 16;
+    data[1] = day;
+    periods.forEach((period, index) => {
+      data[(index * 2) + 2] = period.temperature * 2;
+      if (period.to) {
+        data[(index * 2) + 3] = period.to;
+      } else if (period.toHuman) {
+        data[(index * 2) + 3] = (period.toHuman * 60) / 10;
       }
-    }
-    return b;
+    });
+    return data;
   },
   setTemperatureOffset: offset => Buffer.from(`13${((2 * offset) + 7).toString(16)}`, 'hex'),
   setDay: () => Buffer.from('43', 'hex'),
@@ -47,21 +48,21 @@ export const payload = {
     return Buffer.from(`11${temp}${dur}`, 'hex');
   },
   setDatetime: (date) => {
-    const b = Buffer.alloc(7);
-    b[0] = 3;
-    b[1] = (date.getFullYear() % 100);
-    b[2] = (date.getMonth() + 1);
-    b[3] = date.getDate();
-    b[4] = date.getHours();
-    b[5] = date.getMinutes();
-    b[6] = date.getSeconds();
-    return b;
+    const data = Buffer.alloc(7);
+    data[0] = 3;
+    data[1] = (date.getFullYear() % 100);
+    data[2] = (date.getMonth() + 1);
+    data[3] = date.getDate();
+    data[4] = date.getHours();
+    data[5] = date.getMinutes();
+    data[6] = date.getSeconds();
+    return data;
   },
 };
 
 const status = {
   manual: 1,
-  holiday: 2,
+  eco: 2,
   boost: 4,
   dst: 8,
   openWindow: 16,
@@ -76,14 +77,13 @@ export function parseInfo(info) {
   const targetTemperature = info[5] / 2;
 
   return {
-    status: {
-      manual: (statusMask & status.manual) === status.manual,
-      holiday: (statusMask & status.holiday) === status.holiday,
-      boost: (statusMask & status.boost) === status.boost,
-      dst: (statusMask & status.dst) === status.dst,
-      openWindow: (statusMask & status.openWindow) === status.openWindow,
-      lowBattery: (statusMask & status.lowBattery) === status.lowBattery,
-    },
+    automaticMode: (statusMask & status.manual) !== status.manual,
+    manualMode: (statusMask & status.manual) === status.manual,
+    eco: (statusMask & status.eco) === status.eco,
+    boost: (statusMask & status.boost) === status.boost,
+    dst: (statusMask & status.dst) === status.dst,
+    openWindow: (statusMask & status.openWindow) === status.openWindow,
+    lowBattery: (statusMask & status.lowBattery) === status.lowBattery,
     valvePosition,
     targetTemperature,
   };
