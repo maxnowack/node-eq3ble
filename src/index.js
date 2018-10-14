@@ -10,7 +10,7 @@ import {
 
 class EQ3BLE {
   static SCAN_UUIDS = [serviceUuid]
-  static is = peripheral => peripheral.advertisement.localName === 'CC-RT-BLE'
+  static is = peripheral => peripheral.advertisement.localName === 'CC-RT-BLE' || peripheral.advertisement.localName === 'CC-RT-M-BLE'
 
   constructor(device) {
     NobleDevice.call(this, device);
