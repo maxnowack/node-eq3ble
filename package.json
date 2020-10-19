@@ -9,6 +9,7 @@
     "lint": "./node_modules/.bin/eslint src",
     "test": "npm run lint",
     "build": "./node_modules/.bin/babel src -d dist",
+    "prepare: "npm run build",
     "prepublish": "npm run build"
   },
   "author": "Max Nowack <max@unsou.de>",
